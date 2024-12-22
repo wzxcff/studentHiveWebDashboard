@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>StudentHive | Schedule</title>
+</head>
+<body>
+    <h1>Weekly Schedule</h1>
+    <div th:each="day : ${schedule}">
+        <h3 th:text="${day.key}"></h3>
+        <div class="table" th:if="${!day.value.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Type</th>
+                    <th>Time</th>
+                    <th>Subject</th>
+                    <th>Lecturer</th>
+                    <th>Link</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="lesson : ${schedule[day.key]}">
+                    <td th:text="${lesson.number}">Number</td>
+                    <td th:text="${lesson.type}">Type</td>
+                    <td th:text="${lesson.time}">Time</td>
+                    <td th:text="${lesson.subject}">Subject</td>
+                    <td th:text="${lesson.lecturer}">Lecturer</td>
+                    <td><a th:href="${lesson.link}" target="_blank" rel="noopener noreferrer">Join</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 th:unless="${!day.value.isEmpty()}">No lessons for this day!</h3>
+    </div>
+</body>
+</html>
