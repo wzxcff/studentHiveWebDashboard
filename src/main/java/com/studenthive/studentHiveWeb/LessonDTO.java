@@ -1,5 +1,7 @@
 package com.studenthive.studentHiveWeb;
 
+import org.bson.types.ObjectId;
+
 public class LessonDTO {
     private String number;
     private String type;
@@ -7,8 +9,20 @@ public class LessonDTO {
     private String subject;
     private String lecturer;
     private String link;
+    private ObjectId Id;
 
     // Constructor
+    public LessonDTO(String number, String type, String time, String subject, String lecturer, String link, ObjectId Id) {
+        this.number = number;
+        this.type = type;
+        this.time = time;
+        this.subject = subject;
+        this.lecturer = lecturer;
+        this.link = link;
+        this.Id = Id;
+    }
+
+    // Constructor without Id
     public LessonDTO(String number, String type, String time, String subject, String lecturer, String link) {
         this.number = number;
         this.type = type;

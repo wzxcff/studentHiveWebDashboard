@@ -2,9 +2,11 @@ package com.studenthive.studentHiveWeb;
 
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
@@ -57,7 +59,6 @@ public class WebController {
                     }
 
                     LessonDTO lessonDTO = new LessonDTO(number, type, time, subject, lecturer, link);
-                    System.out.println(lessonDTO);
                     lessonDTOs.add(lessonDTO);
                 }
             }
@@ -70,6 +71,36 @@ public class WebController {
         model.addAttribute("schedule", scheduleMap);
 
         return "schedule";
+    }
+
+    @GetMapping("/schedule/edit/{day}")
+    public String editSchedule(@PathVariable("day") String day, Model model) {
+        MongoDBManager mongoDBManager = new MongoDBManager();
+        MongoCollection<Document> schedulesCollection = mongoDBManager.getCollection("schedules");
+        List<Document> lessons = schedulesCollection.find(eq("day", day)).into(new ArrayList<>());
+
+        List<LessonDTO> lessonDTOs = new ArrayList<>();
+        if (!lessons.isEmpty()) {
+            for (Document lesson : lessons) {
+                String number = lesson.getString("number");
+                String type = lesson.getString("type");
+                String time = lesson.getString("time");
+                String subject = lesson.getString("subject");
+                String lecturer = lesson.getString("lecturer");
+                String link = lesson.getString("link");
+                ObjectId lessonID = lesson.getObjectId("_id");
+                if (!link.startsWith("http")) {
+                    link = "https://" + link;
+                }
+
+                LessonDTO lessonDTO = new LessonDTO(number, type, time, subject, lecturer, link, lessonID);
+                lessonDTOs.add(lessonDTO);
+            }
+        }
+        model.addAttribute("lessons", lessonDTOs);
+        model.addAttribute("day", day);
+        return "schedule-edit";
+        // TODO: Fix schedule-edit view, make editing schedule.
     }
 
 }

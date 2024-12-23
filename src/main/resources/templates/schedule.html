@@ -34,6 +34,9 @@
                 </tr>
                 </tbody>
             </table>
+            <form th:action="@{/schedule/edit/{dayKey}(dayKey=${day.key})}" method="GET">
+                <button type="submit">Edit</button>
+            </form>
         </div>
         <h3 th:unless="${!day.value.isEmpty()}">No lessons for this day!</h3>
     </div>
