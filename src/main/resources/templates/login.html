@@ -6,27 +6,125 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>StudentHive | Login</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 300;
+    }
+
+    .container {
+        min-width: 400px;
+    }
+
+    a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1rem;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        font-weight: 600;
+        text-align: center;
+        color: #333;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column; /* Stacking form elements vertically */
+        gap: 1rem; /* Adding space between the elements */
+    }
+
+    div {
+        display: flex;
+        flex-direction: column; /* Ensure labels and inputs are stacked vertically */
+    }
+
+    label {
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    button {
+        padding: 12px;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button:active {
+        background-color: #003f7f;
+    }
+
+    button:focus {
+        outline: none;
+    }
+</style>
 </head>
 <body>
-    <h2>Login</h2>
-    <form th:action="@{/login}" method="post">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
+    <div class="container">
+        <h2>Login</h2>
+        <form th:action="@{/login}" method="post">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+        </form>
+        <a href="/home">Continue without logging in</a>
+        <div th:if="${errorMessage}" style="color: red; margin-top: 1.5rem;">
+            <p th:text="${errorMessage}"></p>
         </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password">
-        </div>
-        <div>
-            <button type="submit">Login</button>
-        </div>
-    </form>
-    <div th:if="${errorMessage}" style="color: red;">
-        <p th:text="${errorMessage}"></p>
     </div>
-    <form th:action="@{/home}" method="GET">
-        <button type="submit">Continue without logging in</button>
-    </form>
 </body>
 </html>

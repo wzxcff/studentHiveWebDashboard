@@ -6,12 +6,77 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>StudentHive | Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Montserrat", "sans-serif";
+            font-weight: 300;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            min-width: 1rem;
+            max-width: 500rem;
+            height: 100vh;
+        }
+
+        .info {
+            margin-top: 5em;
+            text-align: center;
+        }
+
+        .info h1 {
+            margin-top: 3rem;
+            font-weight: 600;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            padding: 10px 20px;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            background-color: #007bff; /* Clean blue */
+            color: #fff; /* White text */
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            border-color: #004085; /* Accent border */
+        }
+
+        .buttons {
+            margin-top: 3rem;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>HOME</h1>
-    <div class="buttons">
-        <form th:action="@{/schedule}"><button type="submit">Schedule</button></form>
-        <form th:action="@{/attendance}"><button type="submit">Attendance</button></form>
+    <div class="container">
+        <div class="info">
+            <h1>Welcome!</h1>
+            <div class="buttons">
+                <form th:action="@{/schedule}"><button type="submit" class="btn">Schedule</button></form>
+                <form th:action="@{/attendance}"><button type="submit" class="btn">Attendance</button></form>
+                <form th:action="@{/login}"><button type="submit" class="btn">Login</button></form>
+            </div>
+        </div>
     </div>
 </body>
 </html>

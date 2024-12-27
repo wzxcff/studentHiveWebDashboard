@@ -6,42 +6,154 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>StudentHive | Schedule</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 300;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 2rem;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            background-color: #003f7f;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        h1, h3 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .table {
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 400;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9e9e9;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h3 {
+            margin-top: 2rem;
+            color: #555;
+        }
+
+        .logout-container {
+            margin-top: 3rem;
+        }
+
+        .logout-btn {
+            width: 8rem;
+        }
+
+        .container {
+            max-width: 70em;
+            display: flex;
+            flex-direction: column;
+            justify-self: center;
+        }
+    </style>
 </head>
 <body>
-    <form th:action="@{/logout}" method="POST">
-        <button type="submit">Logout</button>
-    </form>
-    <h1>Weekly Schedule</h1>
-    <div th:each="day : ${schedule}">
-        <h3 th:text="${day.key}"></h3>
-        <div class="table" th:if="${!day.value.isEmpty()}">
-            <table>
-                <thead>
-                <tr>
-                    <th>Number</th>
-                    <th>Type</th>
-                    <th>Time</th>
-                    <th>Subject</th>
-                    <th>Lecturer</th>
-                    <th>Link</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="lesson : ${schedule[day.key]}">
-                    <td th:text="${lesson.number}">Number</td>
-                    <td th:text="${lesson.type}">Type</td>
-                    <td th:text="${lesson.time}">Time</td>
-                    <td th:text="${lesson.subject}">Subject</td>
-                    <td th:text="${lesson.lecturer}">Lecturer</td>
-                    <td><a th:href="${lesson.link}" target="_blank" rel="noopener noreferrer">Join</a></td>
-                </tr>
-                </tbody>
-            </table>
+    <div class="container">
+        <h1>Weekly Schedule</h1>
+        <div th:each="day : ${schedule}">
+            <h3 th:text="${day.key}"></h3>
+            <div class="table" th:if="${!day.value.isEmpty()}">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Type</th>
+                        <th>Time</th>
+                        <th>Subject</th>
+                        <th>Lecturer</th>
+                        <th>Link</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="lesson : ${schedule[day.key]}">
+                        <td th:text="${lesson.number}">Number</td>
+                        <td th:text="${lesson.type}">Type</td>
+                        <td th:text="${lesson.time}">Time</td>
+                        <td th:text="${lesson.subject}">Subject</td>
+                        <td th:text="${lesson.lecturer}">Lecturer</td>
+                        <td><a th:href="${lesson.link}" target="_blank" rel="noopener noreferrer">Join</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3 th:unless="${!day.value.isEmpty()}">No lessons for this day!</h3>
+            <form th:action="@{/schedule/edit/{dayKey}(dayKey=${day.key})}" method="GET">
+                <button type="submit">Edit</button>
+            </form>
         </div>
-        <h3 th:unless="${!day.value.isEmpty()}">No lessons for this day!</h3>
-        <form th:action="@{/schedule/edit/{dayKey}(dayKey=${day.key})}" method="GET">
-            <button type="submit">Edit</button>
-        </form>
+        <div class="logout-container">
+            <form th:action="@{/logout}" method="POST">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>
