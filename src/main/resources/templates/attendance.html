@@ -11,7 +11,17 @@
     <div class="container">
         <h1 class="title">Attendance view</h1>
         <div class="content">
+            <div th:each="dayEntry : ${groupedData}">
+                <h2 th:text="${dayEntry.key}"></h2> <!-- Day -->
 
+                <div th:each="subjectEntry : ${dayEntry.value.entrySet()}">
+                    <h3 th:text="${subjectEntry.key}"></h3> <!-- Subject -->
+
+                    <ul>
+                        <li th:each="attendee : ${subjectEntry.value}" th:text="${attendee}"></li> <!-- Attendee -->
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </body>

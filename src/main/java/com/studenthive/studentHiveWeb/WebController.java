@@ -113,7 +113,6 @@ public class WebController {
         model.addAttribute("day", day);
 
         return "admin/schedule-edit";
-        // TODO: Fix schedule-edit view, make editing schedule.
     }
 
     @PostMapping("/schedule/update/{day}")
@@ -155,6 +154,51 @@ public class WebController {
         schedulesCollection.deleteMany(eq("day", day));
 
         return "redirect:/schedule";
+    }
+
+    @GetMapping("/attendance")
+    public String attendance(Model model) {
+        MongoDBManager mongoDBManager = new MongoDBManager();
+        MongoCollection<Document> attendanceCollection = mongoDBManager.getCollection("attendance");
+
+        List<Document> attendeesList = attendanceCollection.find().into(new ArrayList<>());
+
+        Map<String, Map<String, List<String>>> grouped = new TreeMap<>();
+
+        for (Document doc : attendeesList) {
+            String day = doc.getString("day");
+            String subject = doc.getString("subject");
+            int lesson = doc.getInteger("lesson");
+            List<List<String>> attendees = (List<List<String>>) doc.get("attendees");
+
+            String formattedSubject = lesson + " - " + subject;
+
+            List<String> attendeesDisplay = new ArrayList<>();
+            for (List<String> attendeeGroup : attendees) {
+                if (attendeeGroup.size() >= 2) {
+                    String username = attendeeGroup.get(0);
+                    String firstName = attendeeGroup.get(1);
+                    String lastName = attendeeGroup.get(2);
+                    if (lastName != null) {
+                        attendeesDisplay.add(firstName + " (" + username + ") " + lastName);
+                    }
+                    else {
+                        attendeesDisplay.add(firstName + " (" + username + ")");
+                    }
+                }
+            }
+
+            grouped.putIfAbsent(day, new TreeMap<>());
+            Map<String, List<String>> dayMap = grouped.get(day);
+
+            dayMap.putIfAbsent(formattedSubject, new ArrayList<>());
+            dayMap.get(formattedSubject).addAll(attendeesDisplay);
+        }
+
+
+        model.addAttribute("groupedData", grouped);
+
+        return "attendance"; // Render the attendance page
     }
 
 }
