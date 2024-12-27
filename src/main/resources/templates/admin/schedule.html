@@ -8,8 +8,8 @@
     <title>StudentHive | Schedule</title>
 </head>
 <body>
-    <form th:action="@{/login}" method="GET">
-        <button type="submit">Login</button>
+    <form th:action="@{/logout}" method="POST">
+        <button type="submit">Logout</button>
     </form>
     <h1>Weekly Schedule</h1>
     <div th:each="day : ${schedule}">
@@ -39,6 +39,9 @@
             </table>
         </div>
         <h3 th:unless="${!day.value.isEmpty()}">No lessons for this day!</h3>
+        <form th:action="@{/schedule/edit/{dayKey}(dayKey=${day.key})}" method="GET">
+            <button type="submit">Edit</button>
+        </form>
     </div>
 </body>
 </html>

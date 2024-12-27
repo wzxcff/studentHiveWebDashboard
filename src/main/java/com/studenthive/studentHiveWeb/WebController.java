@@ -3,11 +3,15 @@ package com.studenthive.studentHiveWeb;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.core.Authentication;
 
 import java.util.*;
 
@@ -18,7 +22,7 @@ public class WebController {
 
     @GetMapping("/")
     public String index() {
-        return "index";
+        return "redirect:/home";
     }
 
     @GetMapping("/home")
@@ -66,14 +70,22 @@ public class WebController {
 
             scheduleMap.put(day, lessonDTOs);
         }
-        System.out.println(scheduleMap);
 
         model.addAttribute("schedule", scheduleMap);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (isAdmin) {
+            return "admin/schedule";
+        }
 
         return "schedule";
     }
 
     @GetMapping("/schedule/edit/{day}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String editSchedule(@PathVariable("day") String day, Model model) {
         MongoDBManager mongoDBManager = new MongoDBManager();
         MongoCollection<Document> schedulesCollection = mongoDBManager.getCollection("schedules");
@@ -99,8 +111,50 @@ public class WebController {
         }
         model.addAttribute("lessons", lessonDTOs);
         model.addAttribute("day", day);
-        return "schedule-edit";
+
+        return "admin/schedule-edit";
         // TODO: Fix schedule-edit view, make editing schedule.
+    }
+
+    @PostMapping("/schedule/update/{day}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String updateSchedule(
+            @PathVariable("day") String day,
+            @RequestParam("number[]") List<String> numbers,
+            @RequestParam("type[]") List<String> types,
+            @RequestParam("time[]") List<String> times,
+            @RequestParam("subject[]") List<String> subjects,
+            @RequestParam("lecturer[]") List<String> lecturers,
+            @RequestParam("link[]") List<String> links) {
+
+        MongoDBManager mongoDBManager = new MongoDBManager();
+        MongoCollection<Document> schedulesCollection = mongoDBManager.getCollection("schedules");
+        schedulesCollection.deleteMany(new Document("day", day));
+
+        List<Document> newLessons = new ArrayList<>();
+        for (int i = 0; i < numbers.size(); i++) {
+            Document lesson = new Document()
+                    .append("day", day)
+                    .append("number", numbers.get(i))
+                    .append("type", types.get(i))
+                    .append("time", times.get(i))
+                    .append("subject", subjects.get(i))
+                    .append("lecturer", lecturers.get(i))
+                    .append("link", links.get(i));
+            schedulesCollection.insertOne(lesson);
+        }
+
+        return "redirect:/schedule";
+    }
+
+    @PostMapping("/schedule/clear/{day}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String clearSchedule(@PathVariable("day") String day) {
+        MongoDBManager mongoDBManager = new MongoDBManager();
+        MongoCollection<Document> schedulesCollection = mongoDBManager.getCollection("schedules");
+        schedulesCollection.deleteMany(eq("day", day));
+
+        return "redirect:/schedule";
     }
 
 }

@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>StudentHive | Edit schedule</title>
 </head>
 <body>
     <div class="container">
@@ -39,10 +39,13 @@
             <form th:action="@{/schedule}" method="GET">
                 <button type="submit">Go back</button>
             </form>
+            <form th:action="@{/schedule/clear/{day}(day=${day})}" method="POST">
+                <button type="submit">Clear schedule</button>
+            </form>
         </div>
         <div class="table-container">
             <h3>Edit schedule</h3>
-            <form th:action="@{/schedule/update}" method="POST">
+            <form th:action="@{/schedule/update/{day}(day=${day})}" method="POST" id="validate">
                 <table>
                     <thead>
                     <tr>
@@ -87,6 +90,15 @@
             const row = button.parentNode.parentNode;
             row.remove();
         }
+
+        document.querySelector("#validate").addEventListener("submit", function (event) {
+            const numbers = document.querySelectorAll("[name='number[]']");
+            if (numbers.length === 0) {
+                alert("No changes provided!");
+                event.preventDefault();
+            }
+        });
+
 
     </script>
 </body>
