@@ -11,7 +11,7 @@ Index page
 Schedule page
 <img width="1440" alt="image" src="https://github.com/user-attachments/assets/2079a5a1-eafc-4048-b3c0-4570a0a25cca" />
 
-Edit schedule page
+Edit schedule page (auth required)
 <img width="1440" alt="image" src="https://github.com/user-attachments/assets/f72de58d-ca9f-4f1a-a680-4afa3534bbbf" />
 
 Attendance page view (auth required)
